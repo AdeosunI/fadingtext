@@ -24,6 +24,7 @@ class AnimatedApp extends StatefulWidget {
 class AnimatedAppState extends State<AnimatedApp> {
   final PageController _pageViewController = PageController(initialPage: 1);
   bool _isDarkMode = false;
+  bool _showFrame = false;
 
   void _toggleTheme() {
     setState(() {
@@ -56,11 +57,40 @@ class AnimatedAppState extends State<AnimatedApp> {
             ),
           ],
         ),
-        body: PageView(
-          controller: _pageViewController,
+        body: Column(
           children: [
-            Center(child: PageContent(index: 1)),
-            Center(child: PageContent(index: 2)),
+            SwitchListTile(
+              title: const Text('Show Frame'),
+              value: _showFrame,
+              onChanged: (bool value) {
+                setState(() {
+                  _showFrame = value;
+                });
+              },
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: _showFrame
+                    ? Border.all(color: Colors.blue, width: 4)
+                    : null,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset('images/i.jpg'),
+              ),
+            ),
+            Expanded(
+              child: PageView(
+                controller: _pageViewController,
+                children: [
+                  Center(child: PageContent(index: 1)),
+                  Center(child: PageContent(index: 2)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
